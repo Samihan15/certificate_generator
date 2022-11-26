@@ -11,10 +11,20 @@ class AccountsDetails extends StatefulWidget {
 }
 
 class _AccountsDetailsState extends State<AccountsDetails> {
-  TextEditingController month = TextEditingController();
+  TextEditingController _month = TextEditingController();
   TextEditingController total_business = TextEditingController();
   TextEditingController total_collection = TextEditingController();
   TextEditingController total_pending_collection = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _month.dispose();
+    total_business.dispose();
+    total_collection.dispose();
+    total_pending_collection.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,26 +40,32 @@ class _AccountsDetailsState extends State<AccountsDetails> {
           child: Column(
             children: [
               SizedBox(height: 10),
-              textfield(controller: month, label: 'Month and Year'),
-              SizedBox(height: 10),
-              textfield(controller: total_business, label: 'Total Business'),
+              textfield(controller: _month, label: 'Month and Year'),
               SizedBox(height: 10),
               textfield(
-                  controller: total_collection, label: 'Total Collection'),
+                  controller: total_business,
+                  label: 'Total Business',
+                  type: TextInputType.number),
+              SizedBox(height: 10),
+              textfield(
+                  controller: total_collection,
+                  label: 'Total Collection',
+                  type: TextInputType.number),
               SizedBox(height: 10),
               textfield(
                   controller: total_pending_collection,
-                  label: 'Total Pending Collection'),
+                  label: 'Total Pending Collection',
+                  type: TextInputType.number),
               SizedBox(height: 10),
               Container(
                 width: 120,
                 child: ElevatedButton(
                   onPressed: () {
                     accounts(
-                      total_business: total_business,
-                      total_collection: total_collection,
-                      total_pending_collection: total_pending_collection,
-                      month: month.text,
+                      total_business: total_business.text,
+                      total_collection: total_collection.text,
+                      total_pending_collection: total_pending_collection.text,
+                      month: _month.text.trim(),
                     );
 
                     const snackdemo = SnackBar(
@@ -88,7 +104,7 @@ class _AccountsDetailsState extends State<AccountsDetails> {
       'total_business': int.parse(total_business),
       'total_collection': int.parse(total_collection),
       'total_pending_collection': int.parse(total_pending_collection),
-      'month': month,
+      'month': month.toString(),
     };
     await expense.set(json);
   }
